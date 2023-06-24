@@ -16,18 +16,21 @@ class Flython {
 import argparse
 import json
 import sys
-
-CMD_SYS_VERSION = 0
+import serial
 
 
 def run(command):
-    if command["cmd"] == CMD_SYS_VERSION:
-        return {
-            "sys.version": sys.version,
-        }
-
+    if command['cmd'] == 0:
+        return {"sys.version": sys.version}
     else:
-        return {"error": "Unknown command."}
+        usbPath = command["usb_path"]
+        port = serial.Serial(usbPath)
+        port.dtr = False
+        port.rts = False
+        print(port.readline())
+        print(port.readline())
+        port.close()
+        return {"success": True}
 
 
 if __name__ == "__main__":
